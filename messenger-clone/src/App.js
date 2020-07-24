@@ -2,12 +2,16 @@ import React, { Component } from "react";
 import { Button, FormControl, InputLabel, Input } from "@material-ui/core";
 import "./App.css";
 
+import Message from "./Message";
+
 class App extends Component {
   constructor() {
     super();
     this.state = {
       input: "",
-      messages: ["a", "b", "c"],
+      messages: [{username: 'sonny',text: 'hey guys'}, 
+                 {username: 'quize',text: 'whats up'}], 
+      user: ""
     };
   }
 
@@ -20,15 +24,24 @@ class App extends Component {
   sendMessage = (event) => {
     event.preventDefault();
     this.setState({
-      messages: [...this.state.messages, this.state.input],
+      messages: [...this.state.messages, {username: this.state.user ,text: this.state.input}],
       input: "",
     });
   };
 
+  componentDidMount() {
+    const userName = prompt("Enter your name");
+    if (userName !== null) {
+      this.setState({ user: userName });
+    } else {
+      this.setState({ user: "unknown" });
+    }
+  }
+
   render() {
     return (
       <div className="App">
-        <h1>Hello Programmers</h1>
+        <h1>Hello {this.state.user}</h1>
 
         <form>
           <FormControl>
@@ -47,7 +60,7 @@ class App extends Component {
         </form>
 
         {[...this.state.messages].map((message) => (
-          <p>{message}</p>
+          <Message user={message.username} text={message.text} />
         ))}
       </div>
     );
