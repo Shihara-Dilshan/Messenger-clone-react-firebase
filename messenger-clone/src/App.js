@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Button, FormControl, InputLabel, Input } from "@material-ui/core";
-import "./App.css";
+import "materialize-css/dist/css/materialize.min.css";
+import "./App.css"; 
 
 import Message from "./Message";
 
@@ -9,9 +10,11 @@ class App extends Component {
     super();
     this.state = {
       input: "",
-      messages: [{username: 'sonny',text: 'hey guys'}, 
-                 {username: 'quize',text: 'whats up'}], 
-      user: ""
+      messages: [
+        { username: "sonny", text: "hey guys" },
+        { username: "quize", text: "whats up" },
+      ],
+      user: "",
     };
   }
 
@@ -19,12 +22,15 @@ class App extends Component {
     this.setState({
       input: event.target.value,
     });
-  };
+  }; 
 
   sendMessage = (event) => {
     event.preventDefault();
     this.setState({
-      messages: [...this.state.messages, {username: this.state.user ,text: this.state.input}],
+      messages: [
+        ...this.state.messages,
+        { username: this.state.user, text: this.state.input },
+      ],
       input: "",
     });
   };
@@ -41,26 +47,27 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <h1>Hello {this.state.user}</h1>
-
-        <form>
-          <FormControl>
-            <InputLabel>Enter a message...</InputLabel>
-            <Input value={this.state.input} onChange={this.update} />
-            <Button
-              disabled={!this.state.input}
-              variant="outlined"
-              color="primary"
-              type="submit"
-              onClick={this.sendMessage}
-            >
-              Send Message
-            </Button>
-          </FormControl>
-        </form>
+        <h3 className="grey-text">Hello {this.state.user}</h3>
+        <div>
+          <form>
+            <FormControl>
+              <InputLabel>Enter a message...</InputLabel>
+              <Input value={this.state.input} onChange={this.update} />
+              <Button
+                disabled={!this.state.input}
+                variant="outlined"
+                color="primary"
+                type="submit"
+                onClick={this.sendMessage}
+              >
+                Send Message
+              </Button>
+            </FormControl>
+          </form>
+        </div>
 
         {[...this.state.messages].map((message) => (
-          <Message user={message.username} text={message.text} />
+          <Message username={this.state.user} message={message} />
         ))}
       </div>
     );
