@@ -1,19 +1,18 @@
 import React, { Component } from "react";
 import { Button, FormControl, InputLabel, Input } from "@material-ui/core";
 import "materialize-css/dist/css/materialize.min.css";
-import "./App.css"; 
+import "./App.css";
 
 import Message from "./Message";
+import db from "./firebase";
+import firebase from "firebase";  
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
       input: "",
-      messages: [
-        { username: "sonny", text: "hey guys" },
-        { username: "quize", text: "whats up" },
-      ],
+      messages: [],
       user: "",
     };
   }
@@ -22,20 +21,27 @@ class App extends Component {
     this.setState({
       input: event.target.value,
     });
-  }; 
+  };
 
   sendMessage = (event) => {
     event.preventDefault();
+
+    db.collection("messages").add({
+      username: this.state.user,
+      text: this.state.input,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+
     this.setState({
-      messages: [
-        ...this.state.messages,
-        { username: this.state.user, text: this.state.input },
-      ],
       input: "",
     });
   };
 
   componentDidMount() {
+    db.collection("messages").orderBy('timestamp', 'asc').onSnapshot((snapshot) => {
+      this.setState({ messages: snapshot.docs.map((doc) => doc.data()) });
+    });
+
     const userName = prompt("Enter your name");
     if (userName !== null) {
       this.setState({ user: userName });
