@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Button, FormControl, InputLabel, Input } from "@material-ui/core";
 import "materialize-css/dist/css/materialize.min.css";
 import "./App.css";
 
@@ -49,10 +48,14 @@ class App extends Component {
   };
 
   componentDidMount() {
+    let send_sound;
     db.collection("messages")
       .orderBy("timestamp", "asc")
       .onSnapshot((snapshot) => {
+        send_sound = document.getElementById('new_message');
         this.setState({ messages: snapshot.docs.map((doc) => doc.data()) });
+        window.scrollTo(0, document.body.scrollHeight);
+        send_sound.play();
       });
     const userName = prompt("Enter your name");
     if (userName !== null) {
@@ -60,24 +63,24 @@ class App extends Component {
     } else {
       this.setState({ user: "unknown" });
     }
-    
   }
 
   render() {
     return (
       <React.Fragment>
-        <div style={{ marginBottom:"10%"}}>
+        <div style={{ marginBottom: "15%" }}>
           {[...this.state.messages].map((message) => (
             <Message username={this.state.user} message={message} />
           ))}
         </div>
+        <audio id="new_message" src="https://raw.githubusercontent.com/Shihara-Dilshan/img/master/chatApp/whatsapp_new_message.mp3"></audio>
 
         <div className="App" style={this.getStyle()}>
           <div>
             <form>
               <div className="row">
-                <div className="col s8">
-                  <input value={this.state.input} onChange={this.update} />
+                <div className="col s8 white-text">
+                  <input value={this.state.input} onChange={this.update} style={{color:"white"}}  />
                 </div>
                 <div className="col s4">
                   <button
