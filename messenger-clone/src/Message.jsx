@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./Message.css";
+import './App.css';
 import { Card, CardContent, Typography } from "@material-ui/core";
 
 class Message extends Component {
@@ -12,11 +13,12 @@ class Message extends Component {
     let isUser = this.props.username === this.props.message.username;
     return (
       <div className={`message ${isUser && "message_user"}`}>
-        <Card className={isUser ? "message_userCard" : "message_guestCard "}>
+        <Card className={isUser ? "message_userCard test" : "message_guestCard test"}>
           <CardContent>
-            <Typography color="white" variant="h5" component="h2">
-              {this.props.message.username} : {this.props.message.text}
+            <Typography color="white" variant="h6" component="h6">
+              {this.props.message.username} : {this.props.message.text}<br/>
             </Typography>
+
           </CardContent>
         </Card>
       </div>

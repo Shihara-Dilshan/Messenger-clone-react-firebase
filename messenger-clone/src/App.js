@@ -5,7 +5,7 @@ import "./App.css";
 
 import Message from "./Message";
 import db from "./firebase";
-import firebase from "firebase";  
+import firebase from "firebase";
 
 class App extends Component {
   constructor() {
@@ -25,7 +25,7 @@ class App extends Component {
 
   sendMessage = (event) => {
     event.preventDefault();
-
+    window.scrollTo(0, document.body.scrollHeight);
     db.collection("messages").add({
       username: this.state.user,
       text: this.state.input,
@@ -37,45 +37,64 @@ class App extends Component {
     });
   };
 
-  componentDidMount() {
-    db.collection("messages").orderBy('timestamp', 'asc').onSnapshot((snapshot) => {
-      this.setState({ messages: snapshot.docs.map((doc) => doc.data()) });
-    });
+  getStyle = () => {
+    return {
+      position: "fixed",
+      bottom: "0px",
+      width: "100%",
+      backgroundColor: "transparent",
+      paddingTop: "30px",
+      borderRadius: "30px",
+    };
+  };
 
+  componentDidMount() {
+    db.collection("messages")
+      .orderBy("timestamp", "asc")
+      .onSnapshot((snapshot) => {
+        this.setState({ messages: snapshot.docs.map((doc) => doc.data()) });
+      });
     const userName = prompt("Enter your name");
     if (userName !== null) {
       this.setState({ user: userName });
     } else {
       this.setState({ user: "unknown" });
     }
+    
   }
 
   render() {
     return (
-      <div className="App">
-        <h3 className="grey-text">Hello {this.state.user}</h3>
-        <div>
-          <form>
-            <FormControl>
-              <InputLabel>Enter a message...</InputLabel>
-              <Input value={this.state.input} onChange={this.update} />
-              <Button
-                disabled={!this.state.input}
-                variant="outlined"
-                color="primary"
-                type="submit"
-                onClick={this.sendMessage}
-              >
-                Send Message
-              </Button>
-            </FormControl>
-          </form>
+      <React.Fragment>
+        <div style={{ marginBottom:"10%"}}>
+          {[...this.state.messages].map((message) => (
+            <Message username={this.state.user} message={message} />
+          ))}
         </div>
 
-        {[...this.state.messages].map((message) => (
-          <Message username={this.state.user} message={message} />
-        ))}
-      </div>
+        <div className="App" style={this.getStyle()}>
+          <div>
+            <form>
+              <div className="row">
+                <div className="col s8">
+                  <input value={this.state.input} onChange={this.update} />
+                </div>
+                <div className="col s4">
+                  <button
+                    className="btn teal"
+                    disabled={!this.state.input}
+                    type="submit"
+                    onClick={this.sendMessage}
+                    style={{ width: "100%", verticalAlign: "-15px" }}
+                  >
+                    Send
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </React.Fragment>
     );
   }
 }
