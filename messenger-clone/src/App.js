@@ -53,8 +53,6 @@ class App extends Component {
       .orderBy("timestamp", "asc")
       .onSnapshot((snapshot) => {
         send_sound = document.getElementById('new_message');
-        let xxxxx = snapshot.docs.map((doc) => doc.data());
-        console.log(typeof xxxxx);
         this.setState({ messages: snapshot.docs.map((doc) => doc.data()) });
         window.scrollTo(0, document.body.scrollHeight);
         send_sound.play();
